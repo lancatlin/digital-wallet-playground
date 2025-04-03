@@ -1,3 +1,4 @@
+import { accessToken } from "@/app/config";
 import {
   IssuerResponse,
   VerifierResponse,
@@ -14,7 +15,7 @@ export async function issueCard(data: ClaimFormData): Promise<IssuerResponse> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Access-Token": "mXewKjA1zQZrYNsCt9nlF86uVD7a6n25",
+      "Access-Token": accessToken,
     },
     body: JSON.stringify({
       vcId: 240960,
