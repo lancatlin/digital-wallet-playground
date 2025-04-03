@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { issueCard } from "@/utils/api";
+import { issueCardAction } from "@/app/actions/issuer";
 import Image from "next/image";
+import { ClaimFormData } from "@/types/api";
 
 export default function ClaimPage() {
   const router = useRouter();
@@ -19,8 +20,9 @@ export default function ClaimPage() {
     setError("");
 
     try {
-      const response = await issueCard({ name });
-      setQrCode(response.qr_code);
+      const formData: ClaimFormData = { name };
+      const response = await issueCardAction(formData);
+      setQrCode(response.qrCode);
       setLink(response.link);
     } catch (error) {
       console.error("Error issuing card:", error);
@@ -66,7 +68,7 @@ export default function ClaimPage() {
             <div className="space-y-6">
               <div className="flex justify-center">
                 <Image
-                  src={`data:image/png;base64,${qrCode}`}
+                  src={qrCode}
                   alt="QR Code"
                   width={200}
                   height={200}

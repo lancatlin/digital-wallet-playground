@@ -9,19 +9,40 @@ const ISSUER_API_BASE = "https://issuer-sandbox.wallet.gov.tw";
 const VERIFIER_API_BASE = "https://verifier-sandbox.wallet.gov.tw";
 
 export async function issueCard(data: ClaimFormData): Promise<IssuerResponse> {
-  const response = await fetch(`${ISSUER_API_BASE}/api/vs-item-data`, {
+  const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const response = await fetch(`${ISSUER_API_BASE}/api/vc-item-data`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Access-Token": "mXewKjA1zQZrYNsCt9nlF86uVD7a6n25",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      vcId: 240960,
+      vcCid: "wancat_server_key",
+      fields: [
+        {
+          type: "BASIC",
+          cname: "姓名",
+          ename: "name",
+          content: data.name,
+        },
+        {
+          type: "NORMAL",
+          cname: "發證日期",
+          ename: "issued_at",
+          content: currentDate,
+        },
+      ],
+    }),
   });
 
   if (!response.ok) {
+    console.error(await response.text());
     throw new Error("Failed to issue card");
   }
 
-  return response.json();
+  const { qrCode, deepLink: link, transactionId } = await response.json();
+  return { qrCode, link, transactionId };
 }
 
 export async function getNonceStatus(nonceId: string): Promise<IssuerResponse> {

@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getVerificationQR, getVerificationResult } from "@/utils/api";
+import {
+  getVerificationQRAction,
+  getVerificationResultAction,
+} from "@/app/actions/verifier";
 import Image from "next/image";
 
 export default function VerifyPage() {
@@ -15,7 +18,7 @@ export default function VerifyPage() {
   useEffect(() => {
     const fetchQRCode = async () => {
       try {
-        const response = await getVerificationQR();
+        const response = await getVerificationQRAction();
         setQrCode(response.qr_code);
         setLink(response.link);
       } catch (error) {
@@ -31,7 +34,7 @@ export default function VerifyPage() {
 
   const handleVerify = async () => {
     try {
-      const result = await getVerificationResult();
+      const result = await getVerificationResultAction();
       if (result.verified) {
         router.push("/result");
       } else {

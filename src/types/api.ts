@@ -1,7 +1,7 @@
 export interface IssuerResponse {
-  nonce_id: string;
-  qr_code: string;
+  qrCode: string;
   link: string;
+  transactionId: string;
 }
 
 export interface VerifierResponse {

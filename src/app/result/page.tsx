@@ -2,21 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getVerificationResult } from "@/utils/api";
+import { getVerificationResultAction } from "@/app/actions/verifier";
+import { VerificationResult } from "@/types/api";
 
 export default function ResultPage() {
   const router = useRouter();
-  const [result, setResult] = useState<{
-    verified: boolean;
-    message: string;
-  } | null>(null);
+  const [result, setResult] = useState<VerificationResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const checkResult = async () => {
       try {
-        const verificationResult = await getVerificationResult();
+        const verificationResult = await getVerificationResultAction();
         setResult(verificationResult);
       } catch (error) {
         console.error("Error checking verification result:", error);
