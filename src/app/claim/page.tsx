@@ -14,10 +14,23 @@ export default function ClaimPage() {
   const [qrCode, setQrCode] = useState("");
   const [link, setLink] = useState("");
 
+  const validateName = (name: string): boolean => {
+    // Regular expression for Chinese characters, English letters, and underscores
+    const nameRegex = /^[\u4e00-\u9fa5a-zA-Z_]+$/;
+    return nameRegex.test(name);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    // Validate name before submitting
+    if (!validateName(name)) {
+      setError("姓名只能包含中文字、英文字母和底線");
+      setLoading(false);
+      return;
+    }
 
     try {
       const formData: ClaimFormData = { name };
@@ -44,7 +57,7 @@ export default function ClaimPage() {
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  姓名
+                  姓名（限中英文與底線）
                 </label>
                 <input
                   type="text"
@@ -52,7 +65,7 @@ export default function ClaimPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="mt-1 block w-full p-3 rounded-md border-gray-300 shadow-sm text-black focus:border-blue-500 focus:ring-blue-500"
                 />
               </div>
               {error && <p className="text-red-600 text-sm">{error}</p>}
@@ -66,6 +79,17 @@ export default function ClaimPage() {
             </form>
           ) : (
             <div className="space-y-6">
+              <p className="text-gray-900">
+                開啟數位皮夾 App 掃描以下 QR Code{" "}
+              </p>
+              <p>
+                <a
+                  className="text-blue-500 underline"
+                  href="https://www.wallet.gov.tw/"
+                >
+                  政府官網介紹
+                </a>
+              </p>
               <div className="flex justify-center">
                 <Image
                   src={qrCode}
